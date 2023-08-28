@@ -6,7 +6,8 @@ const Words = () => {
     const [guess, setGuess] = useState("")
     let word = "House"
     word = word.toUpperCase().split("")
-    let i = 1
+    let round = 0
+    let guessedWord = ""
 
 
     const changeHandler = event => {
@@ -41,10 +42,13 @@ const Words = () => {
     const submitHandler = e =>{
       e.preventDefault()
       guessedWord = Object.values(guess)
-      console.log("yay",guessedWord)
+      checkWords(guessedWord)
     }
 
-  
+    const checkWords = (guessWord, actualWord) =>{
+      round++
+      
+    }
   return (
     <>
         <Nav />

@@ -92,6 +92,9 @@ const Words = () => {
             if(word.includes(guessArr[i])){
               if(guessArr[i] == word[i]){
                 letterStatus[`r${i}`]="Right"
+                setTimeout(() => {
+                  setLetterStatus({ ...letterStatus });
+                }, 0);
                 
                 // setLetterStatus({...letterStatus,})
                 // setGuess({...guess, ${i}: "Right"})
@@ -99,11 +102,17 @@ const Words = () => {
               }else{
                 // setGuess({...guess,status: "Close"})
                 letterStatus[`r${i}`]="Close"
+                setTimeout(() => {
+                  setLetterStatus({ ...letterStatus });
+                }, 0);
 
                 console.log("Close",guessArr[i],word[i])
               }
             }else{
               letterStatus[`r${i}`]="Incorrect"
+              setTimeout(() => {
+                setLetterStatus({ ...letterStatus });
+              }, 0);
               console.log("no",guessArr[i],word[i])
             }
         }

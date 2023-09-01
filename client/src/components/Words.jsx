@@ -31,15 +31,19 @@ const Words = () => {
 
 
     const changeHandler = event => {
-      console.log(event)
       setGuess({...guess, [event.target.name]: event.target.value.toUpperCase()})
       if(event.target.value.length == 1){
         if(event.target.nextSibling != null){
+          letterStatus[event.target.name+"_status"] = true
           event.target.nextElementSibling.focus()
+          letterStatus[event.target.nextElementSibling.name+"_status"] = false
+
         }
       }else{
         if(event.target.previousSibling != null){
+          letterStatus[event.target.name+"_status"] = true
           event.target.previousElementSibling.focus()
+          letterStatus[event.target.previousSibling.name+"_status"] = false
         }
       }
     }
@@ -79,7 +83,7 @@ const Words = () => {
         name={name}
         onChange={changeHandler}
         className={`${tileStyle} ${status === "Right" ? correctStyle : ""} ${status === "Close" ? closeStyle : ""} ${status === "Incorrect" ? incorrectStyle : ""}`}
-        maxLength="10"
+        maxLength="1"
         value={guess[name]}
         readOnly={ls}
       />
@@ -93,7 +97,7 @@ const Words = () => {
             if(word.includes(guessArr[i])){
               if(guessArr[i] == word[i]){
                 letter[`r${i}`]="Right"
-                letter[`r${i}_status`] = true
+                // letterStatus[`r${i}_status`] = true
                   setLetter({ ... letter });
               }else{
                 letter[`r${i}`]="Close"

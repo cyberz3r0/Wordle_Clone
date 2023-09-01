@@ -58,6 +58,11 @@ const Words = () => {
         
         if (event.key === 'Enter') {
           setRound(round+1)
+          letterStatus[event.target.name+"_status"] = true
+          let nextNode = document.querySelector(`[name=r${Object.keys(guess).length}]`)  
+          letterStatus[`r${Object.keys(guess).length}_status`] = false
+          nextNode.focus()
+          
           
         }
       };
@@ -70,7 +75,10 @@ const Words = () => {
 
     useEffect(() => {
       if (round > 0) {
-        checkWords();
+        let guessArr = Object.values(guess)
+        
+        
+        checkWords(guessArr);
       }
     }, [round]);
 
@@ -89,9 +97,9 @@ const Words = () => {
       />
     );
 
-    const checkWords = () =>{
+    const checkWords = (guessArr) =>{
       
-      let guessArr = Object.values(guess)
+      
       if (round==1){
         for (let i = 0; i < 5; i++){
             if(word.includes(guessArr[i])){

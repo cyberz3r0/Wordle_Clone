@@ -48,21 +48,21 @@ const Words = () => {
     useEffect(()=>{
       axios.get("https://random-word-api.herokuapp.com/word?length=5")
       .then((response)=>{
-        console.log("API useEffect")
+        
 
         word = response.data[0]
-        console.log(word)
+        
         word = word.toUpperCase().split("")
-        console.log(word)
+        
       })
       .catch((error)=>{
-        console.log(error)
+        
       })
     },[])
 
     useEffect(() => {
       const keyDownHandler = event => {
-        console.log("Key Press useEffect")
+        
         if (event.keyCode===8 && event.target.value.length == 0 && event.target.previousElementSibling !=null) {
           inputStatus[event.target.name+"_status"] = true
           inputStatus[event.target.previousSibling.name+"_status"] = false
@@ -75,7 +75,7 @@ const Words = () => {
 
         
         if (event.key === 'Enter') {
-          console.log(word)
+          
           setRound(round+1)
           inputStatus[event.target.name+"_status"] = true
           let nextNode = document.querySelector(`[name=r${Object.keys(guess).length}]`)  
@@ -93,7 +93,7 @@ const Words = () => {
     }, [guess]);
 
     useEffect(() => {
-      console.log("Round useEffect")
+      
       if (round > 0) {
         let guessArr = Object.values(guess)
         

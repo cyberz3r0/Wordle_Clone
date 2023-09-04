@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import Nav from './Nav'
+import axios from 'axios'
 
 const Words = () => {
     const tileStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold focus:outline-none focus:border-gray-500 caret-transparent"
@@ -47,13 +48,13 @@ const Words = () => {
         }
       }
     }
-    
+    useEffect(()=>{
+      
+    })
+
     useEffect(() => {
       const keyDownHandler = event => {
         if (event.keyCode===8 && event.target.value.length == 0 && event.target.previousElementSibling !=null) {
-          console.log("triggered")
-          console.log(event.target.name+"_status")
-          
           inputStatus[event.target.name+"_status"] = true
           inputStatus[event.target.previousSibling.name+"_status"] = false
           event.target.previousSibling.value = ""

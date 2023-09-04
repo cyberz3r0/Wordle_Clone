@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import Nav from './Nav'
 import axios from 'axios'
 
+let word = ""
 const Words = () => {
     const tileStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold focus:outline-none focus:border-gray-500 caret-transparent"
     const incorrectStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
@@ -25,11 +26,7 @@ const Words = () => {
       r20_status: true, r21_status: true, r22_status: true, r23_status: true, r24_status: true,
       r25_status: true, r26_status: true, r27_status: true, r28_status: true, r29_status: true
     });
-    let word = "House"
-    word = word.toUpperCase().split("")
     
-    
-
 
     const changeHandler = event => {
       setGuess({...guess, [event.target.name]: event.target.value.toUpperCase()})
@@ -49,11 +46,23 @@ const Words = () => {
       }
     }
     useEffect(()=>{
-      
-    })
+      axios.get("https://random-word-api.herokuapp.com/word?length=5")
+      .then((response)=>{
+        console.log("API useEffect")
+
+        word = response.data[0]
+        console.log(word)
+        word = word.toUpperCase().split("")
+        console.log(word)
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+    },[])
 
     useEffect(() => {
       const keyDownHandler = event => {
+        console.log("Key Press useEffect")
         if (event.keyCode===8 && event.target.value.length == 0 && event.target.previousElementSibling !=null) {
           inputStatus[event.target.name+"_status"] = true
           inputStatus[event.target.previousSibling.name+"_status"] = false
@@ -66,6 +75,7 @@ const Words = () => {
 
         
         if (event.key === 'Enter') {
+          console.log(word)
           setRound(round+1)
           inputStatus[event.target.name+"_status"] = true
           let nextNode = document.querySelector(`[name=r${Object.keys(guess).length}]`)  
@@ -83,6 +93,7 @@ const Words = () => {
     }, [guess]);
 
     useEffect(() => {
+      console.log("Round useEffect")
       if (round > 0) {
         let guessArr = Object.values(guess)
         
@@ -114,8 +125,7 @@ const Words = () => {
             if(word.includes(guessArr[i])){
               if(guessArr[i] == word[i]){
                 letterStatus[`r${i}`]="Right"
-                // inputStatus[`r${i}_status`] = true
-                  setLetterStatus({ ... letterStatus });
+                setLetterStatus({ ... letterStatus });
               }else{
                 letterStatus[`r${i}`]="Close"
                 setLetterStatus({ ... letterStatus });

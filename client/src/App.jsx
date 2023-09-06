@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Nav from './components/Nav.jsx'
 import Words from './components/Words.jsx'
 import './App.css'
-import {BrowserRouter, Routes, Route, Link, Navigate} from 'react-router-dom'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
 function App() {
 

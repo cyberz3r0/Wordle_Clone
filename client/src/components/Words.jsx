@@ -46,19 +46,19 @@ const Words = () => {
       }
     }
     useEffect(()=>{
-      axios.get("https://random-word-api.herokuapp.com/word?length=5")
-      .then((response)=>{
+          const controller = new AbortController()
+          axios.get("https://random-word-api.herokuapp.com/word?length=5",{
+          signal: controller.signal})
+          .then((response)=>{
+            word = response.data[0].toUpperCase().split("")
+            console.log(word)
+          })
+          .catch((error)=>{
+            
+          })
+          return () => controller.abort() 
         
-
-        word = response.data[0]
-        
-        word = word.toUpperCase().split("")
-        
-      })
-      .catch((error)=>{
-        
-      })
-    },[])
+        },[])
 
     useEffect(() => {
       const keyDownHandler = event => {
@@ -75,13 +75,15 @@ const Words = () => {
 
         
         if (event.key === 'Enter') {
-          
-          setRound(round+1)
-          inputStatus[event.target.name+"_status"] = true
-          let nextNode = document.querySelector(`[name=r${Object.keys(guess).length}]`)  
-          inputStatus[`r${Object.keys(guess).length}_status`] = false
-          nextNode.focus()
-          
+          if (Object.keys(guess).length % 5 == 0){
+            setRound(round+1)
+            inputStatus[event.target.name+"_status"] = true
+            let nextNode = document.querySelector(`[name=r${Object.keys(guess).length}]`)  
+            inputStatus[`r${Object.keys(guess).length}_status`] = false
+            nextNode.focus()
+          }else{
+            alert("Please enter a 5 letter word") //will be replaced with a modal in future
+          }
           
         }
       };

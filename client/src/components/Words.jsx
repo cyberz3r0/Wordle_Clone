@@ -4,6 +4,7 @@ import axios from 'axios'
 
 let word = ""
 const Words = () => {
+    
     const tileStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold focus:outline-none focus:border-gray-500 caret-transparent"
     const incorrectStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
     const closeStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#B59F3B] caret-transparent"
@@ -46,12 +47,14 @@ const Words = () => {
       }
     }
     useEffect(()=>{
-          const controller = new AbortController()
-          axios.get("https://random-word-api.herokuapp.com/word?length=5",{
-          signal: controller.signal})
-          .then((response)=>{
-            word = response.data[0].toUpperCase().split("")
-            console.log(word)
+      
+      const controller = new AbortController()
+      axios.get("https://random-word-api.herokuapp.com/word?length=5",{
+        signal: controller.signal})
+        .then((response)=>{
+          word = response.data[0].toUpperCase().split("")
+          document.querySelector("[name='r0']").focus()
+          console.log(word)
           })
           .catch((error)=>{
             
@@ -75,13 +78,12 @@ const Words = () => {
 
         
         if (event.key === 'Enter') {
-          if (Object.keys(guess).length % 5 == 0){
-            setRound(round+1)
-            inputStatus[event.target.name+"_status"] = true
-            let nextNode = document.querySelector(`[name=r${Object.keys(guess).length}]`)  
-            inputStatus[`r${Object.keys(guess).length}_status`] = false
-            nextNode.focus()
-          }else{
+          if (Object.keys(guess).length % 5 == 0 && Object.keys(guess).length !=  0){
+            
+            let spellingArr = Object.values(guess)
+            isWordValid(spellingArr.slice(Object.keys(guess).length-5).join(""))
+            
+            }else{
             alert("Please enter a 5 letter word") //will be replaced with a modal in future
           }
           
@@ -118,6 +120,24 @@ const Words = () => {
         readOnly={ls}
       />
     );
+    
+    const isWordValid = word =>{
+      
+        axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+        .then((response)=>{
+          
+            setRound(round+1)
+            inputStatus[event.target.name+"_status"] = true
+            inputStatus[`r${Object.keys(guess).length}_status`] = false
+            document.querySelector(`[name=r${Object.keys(guess).length}]`).focus()  
+        })
+        .catch((error)=>{
+          alert("Not a word")
+        })
+
+      }
+    
+
 
     const checkWords = (guessArr) =>{
       

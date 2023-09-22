@@ -47,12 +47,21 @@ const Words = () => {
       }
     }
     useEffect(()=>{
-      
       const controller = new AbortController()
-      axios.get("https://random-word-api.herokuapp.com/word?length=5",{
-        signal: controller.signal})
+      const options = {
+        params: {'random': 'true',
+                'letters': 5,
+                },
+        headers: {
+          'X-RapidAPI-Key': import.meta.env.VITE_api_key,
+          'X-RapidAPI-Host': import.meta.env.VITE_host
+                  },
+        signal: controller.signal
+      }
+      axios.get("https://wordsapiv1.p.rapidapi.com/words/", options)
         .then((response)=>{
-          word = response.data[0].toUpperCase().split("")
+          console.log(response)
+          word = response.data.word.toUpperCase().split("")
           document.querySelector("[name='r0']").focus()
           console.log(word)
           })

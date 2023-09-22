@@ -131,8 +131,14 @@ const Words = () => {
     );
     
     const isWordValid = word =>{
-      
-        axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+      const options = {
+        headers: {
+          'X-RapidAPI-Key': import.meta.env.VITE_api_key,
+          'X-RapidAPI-Host': import.meta.env.VITE_host
+                  }
+        
+      }
+        axios.get(`https://wordsapiv1.p.rapidapi.com/words/${word}`, options)
         .then((response)=>{
           
             setRound(round+1)

@@ -50,6 +50,7 @@ const Words = () => {
       const controller = new AbortController()
       const options = {
         params: {'letterPattern': '^[a-z]{5}$',
+                  'random': true
                 },
         headers: {
           'X-RapidAPI-Key': import.meta.env.VITE_api_key,

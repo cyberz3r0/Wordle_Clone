@@ -60,10 +60,8 @@ const Words = () => {
       }
       axios.get("https://wordsapiv1.p.rapidapi.com/words/", options)
         .then((response)=>{
-          console.log(response)
           word = response.data.word.toUpperCase().split("")
           document.querySelector("[name='r0']").focus()
-          console.log(word)
           })
           .catch((error)=>{
             
@@ -87,8 +85,7 @@ const Words = () => {
 
         
         if (event.key === 'Enter') {
-          if (Object.keys(guess).length % 5 == 0 && Object.keys(guess).length !=  0){
-            
+          if (Object.values(guess).length % 5 == 0 && Object.values(guess).length !=0 && !Object.values(guess).includes("")){
             let spellingArr = Object.values(guess)
             isWordValid(spellingArr.slice(Object.keys(guess).length-5).join(""))
             

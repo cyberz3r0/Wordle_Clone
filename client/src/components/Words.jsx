@@ -49,8 +49,7 @@ const Words = () => {
     useEffect(()=>{
       const controller = new AbortController()
       const options = {
-        params: {'random': 'true',
-                'letters': 5,
+        params: {'letterPattern': '^[a-z]{5}$',
                 },
         headers: {
           'X-RapidAPI-Key': import.meta.env.VITE_api_key,

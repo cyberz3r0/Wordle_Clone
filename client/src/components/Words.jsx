@@ -5,10 +5,10 @@ import axios from 'axios'
 let word = ""
 const Words = () => {
     
-    const tileStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold focus:outline-none focus:border-gray-500 caret-transparent"
-    const incorrectStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
-    const closeStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#B59F3B] caret-transparent"
-    const correctStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
+    const tileStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold focus:outline-none focus:border-gray-500 caret-transparent"
+    const incorrectStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
+    const closeStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold bg-[#B59F3B] caret-transparent"
+    const correctStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
     const [guess, setGuess] = useState("")
     const [round,setRound] = useState(0)
     const [ letterStatus, setLetterStatus] = useState({
@@ -252,17 +252,19 @@ const Words = () => {
     }
   return (
     <>
-        <Nav />
-        
-        
-          <div className="flex w-4/5 justify-center my-2">
+      <div className="wrapper mx-auto">
+        <div className="navbar mx-auto">
+          <Nav />
+        </div>
+        <div className="content mx-auto mt-10">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r0",  letterStatus.r0, inputStatus.r0_status)}
             {renderInput("r1",  letterStatus.r1, inputStatus.r1_status)}
             {renderInput("r2",  letterStatus.r2, inputStatus.r2_status)}
             {renderInput("r3",  letterStatus.r3, inputStatus.r3_status)}
             {renderInput("r4",  letterStatus.r4, inputStatus.r4_status)}
           </div>
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r5",  letterStatus.r5, inputStatus.r5_status)}
             {renderInput("r6",  letterStatus.r6, inputStatus.r6_status)}
             {renderInput("r7",  letterStatus.r7, inputStatus.r7_status)}
@@ -270,7 +272,7 @@ const Words = () => {
             {renderInput("r9",  letterStatus.r9, inputStatus.r9_status)}
           </div>
 
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r10",  letterStatus.r10, inputStatus.r10_status)}
             {renderInput("r11",  letterStatus.r11, inputStatus.r11_status)}
             {renderInput("r12",  letterStatus.r12, inputStatus.r12_status)}
@@ -278,7 +280,7 @@ const Words = () => {
             {renderInput("r14",  letterStatus.r14, inputStatus.r14_status)}
           </div>
 
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r15",  letterStatus.r15, inputStatus.r15_status)}
             {renderInput("r16",  letterStatus.r16, inputStatus.r16_status)}
             {renderInput("r17",  letterStatus.r17, inputStatus.r17_status)}
@@ -286,7 +288,7 @@ const Words = () => {
             {renderInput("r19",  letterStatus.r19, inputStatus.r19_status)}
           </div>
 
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r20",  letterStatus.r20, inputStatus.r20_status)}
             {renderInput("r21",  letterStatus.r21, inputStatus.r21_status)}
             {renderInput("r22",  letterStatus.r22, inputStatus.r22_status)}
@@ -294,13 +296,17 @@ const Words = () => {
             {renderInput("r24",  letterStatus.r24, inputStatus.r24_status)}
           </div>
 
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r25",  letterStatus.r25, inputStatus.r25_status)}
             {renderInput("r26",  letterStatus.r26, inputStatus.r26_status)}
             {renderInput("r27",  letterStatus.r27, inputStatus.r27_status)}
             {renderInput("r28",  letterStatus.r28, inputStatus.r28_status)}
             {renderInput("r29",  letterStatus.r29, inputStatus.r29_status)}
           </div>
+        </div>
+      </div>
+        
+        
           
     </>
   )

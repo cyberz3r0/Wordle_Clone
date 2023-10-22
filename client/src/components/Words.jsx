@@ -256,7 +256,7 @@ const Words = () => {
         <div className="navbar mx-auto">
           <Nav />
         </div>
-        <div className="content mx-auto mt-10">
+        <div className="content mx-auto my-48">
           <div className="flex w-full justify-center my-2">
             {renderInput("r0",  letterStatus.r0, inputStatus.r0_status)}
             {renderInput("r1",  letterStatus.r1, inputStatus.r1_status)}

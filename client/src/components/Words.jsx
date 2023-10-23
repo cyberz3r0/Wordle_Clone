@@ -103,7 +103,6 @@ const Words = () => {
     }, [guess]);
 
     useEffect(() => {
-      
       if (round > 0) {
         let guessArr = Object.values(guess)
         
@@ -133,17 +132,18 @@ const Words = () => {
           'X-RapidAPI-Key': import.meta.env.VITE_api_key,
           'X-RapidAPI-Host': import.meta.env.VITE_host
                   }
-        
-      }
+        }
+        console.log(word)
         axios.get(`https://wordsapiv1.p.rapidapi.com/words/${word}`, options)
         .then((response)=>{
-          
-            setRound(round+1)
-            inputStatus[event.target.name+"_status"] = true
-            inputStatus[`r${Object.keys(guess).length}_status`] = false
-            document.querySelector(`[name=r${Object.keys(guess).length}]`).focus()  
+          console.log(response)
+          setRound(round+1)
+          inputStatus[event.target.name+"_status"] = true
+          inputStatus[`r${Object.keys(guess).length}_status`] = false
+          document.querySelector(`[name=r${Object.keys(guess).length}]`).focus() 
         })
         .catch((error)=>{
+          console.log(error)
           alert("Not a word")
         })
 
@@ -151,104 +151,30 @@ const Words = () => {
     
 
 
-    const checkWords = (guessArr) =>{
+    const checkWords = guessArr =>{
       
-      
-      if (round==1){
-        for (let i = 0; i < 5; i++){
-            if(word.includes(guessArr[i])){
-              if(guessArr[i] == word[i]){
-                letterStatus[`r${i}`]="Right"
-                setLetterStatus({ ... letterStatus });
-              }else{
-                letterStatus[`r${i}`]="Close"
-                setLetterStatus({ ... letterStatus });
-              }
+      let isWinnerValue = 0
+      for(let [index, letter] of guessArr.slice(guessArr.length-5).entries()){
+        let new_index = ((5*round)-5)+index
+        console.log(word)
+        if(word.includes(letter)){
+            if(letter == word[index]){
+              letterStatus[`r${new_index}`]="Right"
+              isWinnerValue++
             }else{
-              letterStatus[`r${i}`]="Incorrect"
-                setLetterStatus({ ... letterStatus });
+              letterStatus[`r${new_index}`]="Close"
             }
+          }else{
+              letterStatus[`r${new_index}`]="Incorrect"
         }
-        
-      }else if (round==2){
-        for (let i = 5; i < 10; i++){
-            if(word.includes(guessArr[i])){
-              if(guessArr[i] == word[i-5]){
-                letterStatus[`r${i}`]="Right"
-                setLetterStatus({ ... letterStatus });
-              }else{
-                letterStatus[`r${i}`]="Close"
-                setLetterStatus({ ... letterStatus });
-              }
-            }else{
-              letterStatus[`r${i}`]="Incorrect"
-              setLetterStatus({ ... letterStatus });
-            }
-        }
-      }else if (round==3){
-          for (let i = 10; i < 15; i++){
-              if(word.includes(guessArr[i])){
-                if(guessArr[i] == word[i-10]){
-                  letterStatus[`r${i}`]="Right"
-                  setLetterStatus({ ... letterStatus });
-                }else{
-                  letterStatus[`r${i}`]="Close"
-                  setLetterStatus({ ... letterStatus });
-                }
-              }else{
-                letterStatus[`r${i}`]="Incorrect"
-                setLetterStatus({ ... letterStatus });
-              }
-          }
-        }else if (round==4){
-        for (let i = 15; i < 20; i++){
-            if(word.includes(guessArr[i])){
-              if(guessArr[i] == word[i-15]){
-                letterStatus[`r${i}`]="Right"
-                setLetterStatus({ ... letterStatus });
-              }else{
-                letterStatus[`r${i}`]="Close"
-                setLetterStatus({ ... letterStatus });
-              }
-            }else{
-              letterStatus[`r${i}`]="Incorrect"
-              setLetterStatus({ ... letterStatus });
-            }
-        }
-      }else if (round==5){
-          for (let i = 20; i < 25; i++){
-              if(word.includes(guessArr[i])){
-                if(guessArr[i] == word[i-20]){
-                  letterStatus[`r${i}`]="Right"
-                  setLetterStatus({ ... letterStatus });
-                }else{
-                  letterStatus[`r${i}`]="Close"
-                  setLetterStatus({ ... letterStatus });
-                }
-              }else{
-                letterStatus[`r${i}`]="Incorrect"
-                setLetterStatus({ ... letterStatus });
-              }
-          }
-        }else if (round==6){
-            for (let i = 25; i < 30; i++){
-                if(word.includes(guessArr[i])){
-                  if(guessArr[i] == word[i-25]){
-                    letterStatus[`r${i}`]="Right"
-                    setLetterStatus({ ... letterStatus });
-                  }else{
-                    letterStatus[`r${i}`]="Close"
-                    setLetterStatus({ ... letterStatus });
-                  }
-                }else{
-                  letterStatus[`r${i}`]="Incorrect"
-                  setLetterStatus({ ... letterStatus });
-                }
-            }
-        
+        setLetterStatus({ ... letterStatus });
       }
-      
-      
+      console.log(isWinnerValue)
+      if (isWinnerValue < 5 && round==6){
+        alert(`Game Over! The word was ${word}. Please try again.`)
+      }else if(isWinnerValue == 5){
+        alert(`Winner!`)
+      } 
     }
   return (
     <>

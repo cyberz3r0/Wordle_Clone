@@ -11,6 +11,7 @@ const Words = () => {
     const correctStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
     const [guess, setGuess] = useState("")
     const [round,setRound] = useState(0)
+    const [gameStatus,setGameStatus] = useState({completed:false, won:false })
     const [ letterStatus, setLetterStatus] = useState({
       r0: "", r1: "", r2: "", r3: "", r4: "",
       r5: "", r6: "", r7: "", r8: "", r9: "",
@@ -111,8 +112,6 @@ const Words = () => {
       }
     }, [round]);
 
-
-
     const renderInput = (name, status, ls) => (
       
       <input
@@ -136,21 +135,20 @@ const Words = () => {
         console.log(word)
         axios.get(`https://wordsapiv1.p.rapidapi.com/words/${word}`, options)
         .then((response)=>{
-          console.log(response)
           setRound(round+1)
           inputStatus[event.target.name+"_status"] = true
           inputStatus[`r${Object.keys(guess).length}_status`] = false
-          document.querySelector(`[name=r${Object.keys(guess).length}]`).focus() 
+          if (round != 5){
+            document.querySelector(`[name=r${Object.keys(guess).length}]`).focus()
+          }
+          
         })
         .catch((error)=>{
-          console.log(error)
           alert("Not a word")
         })
 
       }
     
-
-
     const checkWords = guessArr =>{
       
       let isWinnerValue = 0
@@ -171,10 +169,18 @@ const Words = () => {
       }
       console.log(isWinnerValue)
       if (isWinnerValue < 5 && round==6){
-        alert(`Game Over! The word was ${word}. Please try again.`)
+        gameStatus['completed']= true
+        gameStatus['won']= false
+        word=word.join("")
       }else if(isWinnerValue == 5){
-        alert(`Winner!`)
+        gameStatus['completed']= true
+        gameStatus['won']= true
+        word=word.join("")
       } 
+    }
+
+    const refreshPage = () => {
+      window.location.reload(true);
     }
   return (
     <>
@@ -182,7 +188,16 @@ const Words = () => {
         <div className="navbar mx-auto">
           <Nav />
         </div>
-        <div className="content mx-auto my-48">
+        
+        <div className={`absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border-2 border-black bg-slate-500 rounded-md h-36 w-1/6 mx-auto flex flex-col justify-around ${gameStatus.completed ? '' : 'hidden'}`}>
+          <p className="text-center text-xl font-bold">{gameStatus.won ? 'Winner' : `Game Over! The word was ${word}. Please try again.`}</p>
+          <p className="text-center">
+            <button onClick={refreshPage} className="border-2 border-slate-500 rounded-md p-2 font-semibold bg-blue-300">Restart</button>
+          </p>
+        </div>
+      
+        
+        <div className="content mx-auto my-72">
           <div className="flex w-full justify-center my-2">
             {renderInput("r0",  letterStatus.r0, inputStatus.r0_status)}
             {renderInput("r1",  letterStatus.r1, inputStatus.r1_status)}
@@ -231,9 +246,6 @@ const Words = () => {
           </div>
         </div>
       </div>
-        
-        
-          
     </>
   )
 }

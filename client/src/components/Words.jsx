@@ -1,14 +1,14 @@
 import React, {useState, useEffect, useRef} from 'react'
 import Nav from './Nav'
 import axios from 'axios'
-
+// import isWordValid from 'helper'
 let word = ""
 const Words = () => {
     
     const tileStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold focus:outline-none focus:border-gray-500 caret-transparent"
-    const incorrectStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
-    const closeStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold bg-[#B59F3B] caret-transparent"
-    const correctStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
+    const incorrectStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
+    const closeStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#B59F3B] caret-transparent"
+    const correctStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
     const [guess, setGuess] = useState("")
     const [round,setRound] = useState(0)
     const [gameStatus,setGameStatus] = useState({completed:false, won:false })
@@ -132,15 +132,15 @@ const Words = () => {
           'X-RapidAPI-Host': import.meta.env.VITE_host
                   }
         }
-        console.log(word)
+        
         axios.get(`https://wordsapiv1.p.rapidapi.com/words/${word}`, options)
         .then((response)=>{
           setRound(round+1)
-          inputStatus[event.target.name+"_status"] = true
-          inputStatus[`r${Object.keys(guess).length}_status`] = false
           if (round != 5){
+            inputStatus[`r${Object.keys(guess).length}_status`] = false
             document.querySelector(`[name=r${Object.keys(guess).length}]`).focus()
           }
+          inputStatus[`r${Object.keys(guess).length-1}_status`] = true
           
         })
         .catch((error)=>{
@@ -154,7 +154,6 @@ const Words = () => {
       let isWinnerValue = 0
       for(let [index, letter] of guessArr.slice(guessArr.length-5).entries()){
         let new_index = ((5*round)-5)+index
-        console.log(word)
         if(word.includes(letter)){
             if(letter == word[index]){
               letterStatus[`r${new_index}`]="Right"
@@ -167,7 +166,7 @@ const Words = () => {
         }
         setLetterStatus({ ... letterStatus });
       }
-      console.log(isWinnerValue)
+      
       if (isWinnerValue < 5 && round==6){
         gameStatus['completed']= true
         gameStatus['won']= false
@@ -176,6 +175,7 @@ const Words = () => {
         gameStatus['completed']= true
         gameStatus['won']= true
         word=word.join("")
+        inputStatus[`r${guessArr.length}_status`] = true
       } 
     }
 
@@ -189,7 +189,7 @@ const Words = () => {
           <Nav />
         </div>
         
-        <div className={`absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border-2 border-black bg-slate-500 rounded-md h-36 w-1/6 mx-auto flex flex-col justify-around ${gameStatus.completed ? '' : 'hidden'}`}>
+        <div className={`z-10 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border-2 border-black bg-slate-500 rounded-md h-36 w-1/6 mx-auto flex flex-col justify-around ${gameStatus.completed ? '' : 'hidden'}`}>
           <p className="text-center text-xl font-bold">{gameStatus.won ? 'Winner' : `Game Over! The word was ${word}. Please try again.`}</p>
           <p className="text-center">
             <button onClick={refreshPage} className="border-2 border-slate-500 rounded-md p-2 font-semibold bg-blue-300">Restart</button>

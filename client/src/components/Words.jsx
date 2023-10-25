@@ -1,16 +1,17 @@
 import React, {useState, useEffect, useRef} from 'react'
 import Nav from './Nav'
 import axios from 'axios'
-
+// import isWordValid from 'helper'
 let word = ""
 const Words = () => {
     
-    const tileStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold focus:outline-none focus:border-gray-500 caret-transparent"
-    const incorrectStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
-    const closeStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#B59F3B] caret-transparent"
-    const correctStyle = "mx-1 border-solid border-2 border-gray-300 w-20 h-20 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
+    const tileStyle = "mx-1 border-solid border-2 border-gray-300 w-16 h-16 text-5xl text-center font-bold focus:outline-none focus:border-gray-500 caret-transparent"
+    const incorrectStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
+    const closeStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#B59F3B] caret-transparent"
+    const correctStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
     const [guess, setGuess] = useState("")
     const [round,setRound] = useState(0)
+    const [gameStatus,setGameStatus] = useState({completed:false, won:false })
     const [ letterStatus, setLetterStatus] = useState({
       r0: "", r1: "", r2: "", r3: "", r4: "",
       r5: "", r6: "", r7: "", r8: "", r9: "",
@@ -103,7 +104,6 @@ const Words = () => {
     }, [guess]);
 
     useEffect(() => {
-      
       if (round > 0) {
         let guessArr = Object.values(guess)
         
@@ -111,8 +111,6 @@ const Words = () => {
         checkWords(guessArr);
       }
     }, [round]);
-
-
 
     const renderInput = (name, status, ls) => (
       
@@ -133,15 +131,17 @@ const Words = () => {
           'X-RapidAPI-Key': import.meta.env.VITE_api_key,
           'X-RapidAPI-Host': import.meta.env.VITE_host
                   }
+        }
         
-      }
         axios.get(`https://wordsapiv1.p.rapidapi.com/words/${word}`, options)
         .then((response)=>{
-          
-            setRound(round+1)
-            inputStatus[event.target.name+"_status"] = true
+          setRound(round+1)
+          if (round != 5){
             inputStatus[`r${Object.keys(guess).length}_status`] = false
-            document.querySelector(`[name=r${Object.keys(guess).length}]`).focus()  
+            document.querySelector(`[name=r${Object.keys(guess).length}]`).focus()
+          }
+          inputStatus[`r${Object.keys(guess).length-1}_status`] = true
+          
         })
         .catch((error)=>{
           alert("Not a word")
@@ -149,120 +149,63 @@ const Words = () => {
 
       }
     
-
-
-    const checkWords = (guessArr) =>{
+    const checkWords = guessArr =>{
       
-      
-      if (round==1){
-        for (let i = 0; i < 5; i++){
-            if(word.includes(guessArr[i])){
-              if(guessArr[i] == word[i]){
-                letterStatus[`r${i}`]="Right"
-                setLetterStatus({ ... letterStatus });
-              }else{
-                letterStatus[`r${i}`]="Close"
-                setLetterStatus({ ... letterStatus });
-              }
+      let isWinnerValue = 0
+      for(let [index, letter] of guessArr.slice(guessArr.length-5).entries()){
+        let new_index = ((5*round)-5)+index
+        if(word.includes(letter)){
+            if(letter == word[index]){
+              letterStatus[`r${new_index}`]="Right"
+              isWinnerValue++
             }else{
-              letterStatus[`r${i}`]="Incorrect"
-                setLetterStatus({ ... letterStatus });
+              letterStatus[`r${new_index}`]="Close"
             }
+          }else{
+              letterStatus[`r${new_index}`]="Incorrect"
         }
-        
-      }else if (round==2){
-        for (let i = 5; i < 10; i++){
-            if(word.includes(guessArr[i])){
-              if(guessArr[i] == word[i-5]){
-                letterStatus[`r${i}`]="Right"
-                setLetterStatus({ ... letterStatus });
-              }else{
-                letterStatus[`r${i}`]="Close"
-                setLetterStatus({ ... letterStatus });
-              }
-            }else{
-              letterStatus[`r${i}`]="Incorrect"
-              setLetterStatus({ ... letterStatus });
-            }
-        }
-      }else if (round==3){
-          for (let i = 10; i < 15; i++){
-              if(word.includes(guessArr[i])){
-                if(guessArr[i] == word[i-10]){
-                  letterStatus[`r${i}`]="Right"
-                  setLetterStatus({ ... letterStatus });
-                }else{
-                  letterStatus[`r${i}`]="Close"
-                  setLetterStatus({ ... letterStatus });
-                }
-              }else{
-                letterStatus[`r${i}`]="Incorrect"
-                setLetterStatus({ ... letterStatus });
-              }
-          }
-        }else if (round==4){
-        for (let i = 15; i < 20; i++){
-            if(word.includes(guessArr[i])){
-              if(guessArr[i] == word[i-15]){
-                letterStatus[`r${i}`]="Right"
-                setLetterStatus({ ... letterStatus });
-              }else{
-                letterStatus[`r${i}`]="Close"
-                setLetterStatus({ ... letterStatus });
-              }
-            }else{
-              letterStatus[`r${i}`]="Incorrect"
-              setLetterStatus({ ... letterStatus });
-            }
-        }
-      }else if (round==5){
-          for (let i = 20; i < 25; i++){
-              if(word.includes(guessArr[i])){
-                if(guessArr[i] == word[i-20]){
-                  letterStatus[`r${i}`]="Right"
-                  setLetterStatus({ ... letterStatus });
-                }else{
-                  letterStatus[`r${i}`]="Close"
-                  setLetterStatus({ ... letterStatus });
-                }
-              }else{
-                letterStatus[`r${i}`]="Incorrect"
-                setLetterStatus({ ... letterStatus });
-              }
-          }
-        }else if (round==6){
-            for (let i = 25; i < 30; i++){
-                if(word.includes(guessArr[i])){
-                  if(guessArr[i] == word[i-25]){
-                    letterStatus[`r${i}`]="Right"
-                    setLetterStatus({ ... letterStatus });
-                  }else{
-                    letterStatus[`r${i}`]="Close"
-                    setLetterStatus({ ... letterStatus });
-                  }
-                }else{
-                  letterStatus[`r${i}`]="Incorrect"
-                  setLetterStatus({ ... letterStatus });
-                }
-            }
-        
+        setLetterStatus({ ... letterStatus });
       }
       
-      
+      if (isWinnerValue < 5 && round==6){
+        gameStatus['completed']= true
+        gameStatus['won']= false
+        word=word.join("")
+      }else if(isWinnerValue == 5){
+        gameStatus['completed']= true
+        gameStatus['won']= true
+        word=word.join("")
+        inputStatus[`r${guessArr.length}_status`] = true
+      } 
+    }
+
+    const refreshPage = () => {
+      window.location.reload(true);
     }
   return (
     <>
-        <Nav />
+      <div className="wrapper mx-auto">
+        <div className="navbar mx-auto">
+          <Nav />
+        </div>
         
+        <div className={`z-10 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border-2 border-black bg-slate-500 rounded-md h-36 w-1/6 mx-auto flex flex-col justify-around ${gameStatus.completed ? '' : 'hidden'}`}>
+          <p className="text-center text-xl font-bold">{gameStatus.won ? 'Winner' : `Game Over! The word was ${word}. Please try again.`}</p>
+          <p className="text-center">
+            <button onClick={refreshPage} className="border-2 border-slate-500 rounded-md p-2 font-semibold bg-blue-300">Restart</button>
+          </p>
+        </div>
+      
         
-          <div className="flex w-4/5 justify-center my-2">
+        <div className="content mx-auto my-72">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r0",  letterStatus.r0, inputStatus.r0_status)}
             {renderInput("r1",  letterStatus.r1, inputStatus.r1_status)}
             {renderInput("r2",  letterStatus.r2, inputStatus.r2_status)}
             {renderInput("r3",  letterStatus.r3, inputStatus.r3_status)}
             {renderInput("r4",  letterStatus.r4, inputStatus.r4_status)}
           </div>
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r5",  letterStatus.r5, inputStatus.r5_status)}
             {renderInput("r6",  letterStatus.r6, inputStatus.r6_status)}
             {renderInput("r7",  letterStatus.r7, inputStatus.r7_status)}
@@ -270,7 +213,7 @@ const Words = () => {
             {renderInput("r9",  letterStatus.r9, inputStatus.r9_status)}
           </div>
 
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r10",  letterStatus.r10, inputStatus.r10_status)}
             {renderInput("r11",  letterStatus.r11, inputStatus.r11_status)}
             {renderInput("r12",  letterStatus.r12, inputStatus.r12_status)}
@@ -278,7 +221,7 @@ const Words = () => {
             {renderInput("r14",  letterStatus.r14, inputStatus.r14_status)}
           </div>
 
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r15",  letterStatus.r15, inputStatus.r15_status)}
             {renderInput("r16",  letterStatus.r16, inputStatus.r16_status)}
             {renderInput("r17",  letterStatus.r17, inputStatus.r17_status)}
@@ -286,7 +229,7 @@ const Words = () => {
             {renderInput("r19",  letterStatus.r19, inputStatus.r19_status)}
           </div>
 
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r20",  letterStatus.r20, inputStatus.r20_status)}
             {renderInput("r21",  letterStatus.r21, inputStatus.r21_status)}
             {renderInput("r22",  letterStatus.r22, inputStatus.r22_status)}
@@ -294,14 +237,15 @@ const Words = () => {
             {renderInput("r24",  letterStatus.r24, inputStatus.r24_status)}
           </div>
 
-          <div className="flex w-4/5 justify-center my-2">
+          <div className="flex w-full justify-center my-2">
             {renderInput("r25",  letterStatus.r25, inputStatus.r25_status)}
             {renderInput("r26",  letterStatus.r26, inputStatus.r26_status)}
             {renderInput("r27",  letterStatus.r27, inputStatus.r27_status)}
             {renderInput("r28",  letterStatus.r28, inputStatus.r28_status)}
             {renderInput("r29",  letterStatus.r29, inputStatus.r29_status)}
           </div>
-          
+        </div>
+      </div>
     </>
   )
 }

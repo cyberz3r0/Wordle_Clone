@@ -11,6 +11,7 @@ const Words = () => {
     const correctStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
     const [guess, setGuess] = useState("")
     const [round,setRound] = useState(0)
+    const [displayErrorMessage,setDisplayErrorMessage]= useState(false)
     const [gameStatus,setGameStatus] = useState({completed:false, won:false })
     const [ letterStatus, setLetterStatus] = useState({
       r0: "", r1: "", r2: "", r3: "", r4: "",
@@ -106,8 +107,6 @@ const Words = () => {
     useEffect(() => {
       if (round > 0) {
         let guessArr = Object.values(guess)
-        
-        
         checkWords(guessArr);
       }
     }, [round]);
@@ -144,7 +143,11 @@ const Words = () => {
           
         })
         .catch((error)=>{
-          alert("Not a word")
+          setDisplayErrorMessage(true)
+          
+          setTimeout(()=>(
+            setDisplayErrorMessage(false)
+            ),2000)
         })
 
       }
@@ -188,7 +191,11 @@ const Words = () => {
         <div className="navbar mx-auto">
           <Nav />
         </div>
-        
+        {displayErrorMessage && (
+          <p className="z-10 absolute left-1/2 -translate-y-4/5 -translate-x-1/2 border-black bg-slate-500 rounded-md p-3 font-semibold">
+            Not a word
+          </p>
+        )}
         <div className={`z-10 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border-2 border-black bg-slate-500 rounded-md h-36 w-1/6 mx-auto flex flex-col justify-around ${gameStatus.completed ? '' : 'hidden'}`}>
           <p className="text-center text-xl font-bold">{gameStatus.won ? 'Winner' : `Game Over! The word was ${word}. Please try again.`}</p>
           <p className="text-center">

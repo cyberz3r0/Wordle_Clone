@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react'
 import Nav from './Nav'
 import axios from 'axios'
-// import isWordValid from 'helper'
 let word = ""
 const Words = () => {
     
@@ -215,7 +214,7 @@ const Words = () => {
         </div>
       
         
-        <div className="content mx-auto mt-72">
+        <div className="content mx-auto mt-72 w-full">
           <div className="flex w-full justify-center my-2">
             {renderInput("r0",  letterStatus.r0, inputStatus.r0_status)}
             {renderInput("r1",  letterStatus.r1, inputStatus.r1_status)}
@@ -263,7 +262,7 @@ const Words = () => {
             {renderInput("r29",  letterStatus.r29, inputStatus.r29_status)}
           </div>
         </div>
-        <div className="letters w-1/5 mx-auto flex flex-wrap justify-center mt-5"> 
+        <div className="letters w-4/5 md:w-2/5 xl:w-1/4 mx-auto flex flex-wrap justify-center mt-5"> 
           {
             Object.keys(upperCaseLetters).map((value,index)=>(
               <div key={index} className={upperCaseLetters[value] === "" ? "m-1 border-solid border-2 border-gray-300 w-10 h-10 text-xl rounded-md text-center font-bold" : upperCaseLetters[value]}>

@@ -49,7 +49,7 @@ To run this project, you will need to add the following environment variables to
 
 ## Screenshots
 
-![Wordle Image](https://www.dropbox.com/scl/fi/v6n2dx9vx13r6muayrq5x/Wordle-image.png?rlkey=vc4e2v2azssle97ocqok0thkn&dl=0)
+![Wordle Image](./client/assets/Wordle-image.png)
 
-![Wordle image2](https://www.dropbox.com/scl/fi/ja02f6lmhn4pjipflde7h/Wordle-image2.png?rlkey=zlv1whk0ajk0qkhprpwbyv8vc&dl=0)
+![Wordle image2](./client/assets/Wordle-image2.png)
 

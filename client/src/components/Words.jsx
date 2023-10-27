@@ -11,7 +11,7 @@ const Words = () => {
     const correctStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
     const [guess, setGuess] = useState("")
     const [round,setRound] = useState(0)
-    const [displayErrorMessage,setDisplayErrorMessage]= useState(false)
+    const [displayErrorMessage,setDisplayErrorMessage]= useState({text:'',showMessage:false})
     const [gameStatus,setGameStatus] = useState({completed:false, won:false })
     const [ letterStatus, setLetterStatus] = useState({
       r0: "", r1: "", r2: "", r3: "", r4: "",
@@ -29,6 +29,7 @@ const Words = () => {
       r20_status: true, r21_status: true, r22_status: true, r23_status: true, r24_status: true,
       r25_status: true, r26_status: true, r27_status: true, r28_status: true, r29_status: true
     });
+    const upperCaseLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     
 
     const changeHandler = event => {
@@ -92,8 +93,8 @@ const Words = () => {
             isWordValid(spellingArr.slice(Object.keys(guess).length-5).join(""))
             
             }else{
-            alert("Please enter a 5 letter word") //will be replaced with a modal in future
-          }
+            displayMessages("Please enter a 5 letter word")
+            }
           
         }
       };
@@ -143,11 +144,7 @@ const Words = () => {
           
         })
         .catch((error)=>{
-          setDisplayErrorMessage(true)
-          
-          setTimeout(()=>(
-            setDisplayErrorMessage(false)
-            ),2000)
+          displayMessages("Not a word")
         })
 
       }
@@ -185,15 +182,22 @@ const Words = () => {
     const refreshPage = () => {
       window.location.reload(true);
     }
+
+    const displayMessages = text =>{
+      setDisplayErrorMessage({...displayErrorMessage, text:text,showMessage:true})
+      setTimeout(()=>(
+        setDisplayErrorMessage({...displayErrorMessage, text:'',showMessage:false})
+        ),2000)
+    }
   return (
     <>
       <div className="wrapper mx-auto">
         <div className="navbar mx-auto">
           <Nav />
         </div>
-        {displayErrorMessage && (
+        {displayErrorMessage.showMessage && (
           <p className="z-10 absolute left-1/2 -translate-y-4/5 -translate-x-1/2 border-black bg-slate-500 rounded-md p-3 font-semibold">
-            Not a word
+            {displayErrorMessage.text}
           </p>
         )}
         <div className={`z-10 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border-2 border-black bg-slate-500 rounded-md h-36 w-1/6 mx-auto flex flex-col justify-around ${gameStatus.completed ? '' : 'hidden'}`}>

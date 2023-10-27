@@ -49,7 +49,7 @@ To run this project, you will need to add the following environment variables to
 
 ## Screenshots
 
-![Wordle Image](./client/assets/Wordle-image.png)
+![Wordle Image](./client/src/assets/Wordle-image.png)
 
-![Wordle image2](./client/assets/Wordle-image2.png)
+![Wordle image2](./client/src/assets/Wordle-image2.png)
 

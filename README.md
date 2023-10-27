@@ -10,7 +10,7 @@ This is a clone project of the popular word guessing game we all know and love. 
 Clone the project
 
 ```bash
-  git clone https://https://github.com/cyberz3r0/Wordle_Clone
+  git clone https://github.com/cyberz3r0/Wordle_Clone
 ```
 
 Go to the project directory

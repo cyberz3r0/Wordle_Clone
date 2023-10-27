@@ -9,6 +9,9 @@ const Words = () => {
     const incorrectStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#3A3A3C] caret-transparent"
     const closeStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#B59F3B] caret-transparent"
     const correctStyle = "mx-1 border-solid border-2 border-gray-500 w-16 h-16 text-5xl text-center font-bold bg-[#538D4E] caret-transparent"
+    const displayLetterIncorrect = "m-1 border-solid border-2 border-gray-300 w-10 h-10 text-xl rounded-md text-center font-bold bg-[#3A3A3C]"
+    const displayLetterClose = "m-1 border-solid border-2 border-gray-300 w-10 h-10 text-xl rounded-md text-center font-bold bg-[#B59F3B]"
+    const displayLetterCorrect = "m-1 border-solid border-2 border-gray-300 w-10 h-10 text-xl rounded-md text-center font-bold bg-[#538D4E]"
     const [guess, setGuess] = useState("")
     const [round,setRound] = useState(0)
     const [displayErrorMessage,setDisplayErrorMessage]= useState({text:'',showMessage:false})
@@ -29,7 +32,11 @@ const Words = () => {
       r20_status: true, r21_status: true, r22_status: true, r23_status: true, r24_status: true,
       r25_status: true, r26_status: true, r27_status: true, r28_status: true, r29_status: true
     });
-    const upperCaseLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    const [upperCaseLetters,setUpperCaseLetters] = useState({
+      'A': "", 'B': "", 'C': "", 'D': "", 'E': "", 'F': "", 'G': "", 'H': "", 'I': "", 'J': "",
+      'K': "", 'L': "", 'M': "", 'N': "", 'O': "", 'P': "", 'Q': "", 'R': "", 'S': "", 'T': "",
+      'U': "", 'V': "", 'W': "", 'X': "", 'Y': "", 'Z': ""
+    });
     
 
     const changeHandler = event => {
@@ -83,10 +90,8 @@ const Words = () => {
           guess[event.target.previousSibling.name]=""
           setGuess({ ... guess })
           event.target.previousElementSibling.focus()
-          
         }
 
-        
         if (event.key === 'Enter') {
           if (Object.values(guess).length % 5 == 0 && Object.values(guess).length !=0 && !Object.values(guess).includes("")){
             let spellingArr = Object.values(guess)
@@ -94,8 +99,7 @@ const Words = () => {
             
             }else{
             displayMessages("Please enter a 5 letter word")
-            }
-          
+          }
         }
       };
         document.addEventListener('keydown', keyDownHandler);
@@ -130,7 +134,7 @@ const Words = () => {
         headers: {
           'X-RapidAPI-Key': import.meta.env.VITE_api_key,
           'X-RapidAPI-Host': import.meta.env.VITE_host
-                  }
+                }
         }
         
         axios.get(`https://wordsapiv1.p.rapidapi.com/words/${word}`, options)
@@ -156,12 +160,15 @@ const Words = () => {
         let new_index = ((5*round)-5)+index
         if(word.includes(letter)){
             if(letter == word[index]){
+              upperCaseLetters[letter] = displayLetterCorrect
               letterStatus[`r${new_index}`]="Right"
               isWinnerValue++
             }else{
+              upperCaseLetters[letter] = displayLetterClose
               letterStatus[`r${new_index}`]="Close"
             }
           }else{
+              upperCaseLetters[letter] = displayLetterIncorrect
               letterStatus[`r${new_index}`]="Incorrect"
         }
         setLetterStatus({ ... letterStatus });
@@ -208,7 +215,7 @@ const Words = () => {
         </div>
       
         
-        <div className="content mx-auto my-72">
+        <div className="content mx-auto mt-72">
           <div className="flex w-full justify-center my-2">
             {renderInput("r0",  letterStatus.r0, inputStatus.r0_status)}
             {renderInput("r1",  letterStatus.r1, inputStatus.r1_status)}
@@ -255,6 +262,15 @@ const Words = () => {
             {renderInput("r28",  letterStatus.r28, inputStatus.r28_status)}
             {renderInput("r29",  letterStatus.r29, inputStatus.r29_status)}
           </div>
+        </div>
+        <div className="letters w-1/5 mx-auto flex flex-wrap justify-center mt-5"> 
+          {
+            Object.keys(upperCaseLetters).map((value,index)=>(
+              <div key={index} className={upperCaseLetters[value] === "" ? "m-1 border-solid border-2 border-gray-300 w-10 h-10 text-xl rounded-md text-center font-bold" : upperCaseLetters[value]}>
+                {value}
+              </div>
+          ))
+          }
         </div>
       </div>
     </>
